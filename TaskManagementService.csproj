@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>TaskManagementService</AssemblyName>
+    <RootNamespace>TaskManagementService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

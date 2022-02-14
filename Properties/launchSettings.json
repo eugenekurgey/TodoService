@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TodoApiDTO": {
+    "TaskManagementService": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
