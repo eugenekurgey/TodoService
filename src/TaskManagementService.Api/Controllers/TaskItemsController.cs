@@ -15,12 +15,10 @@ namespace TaskManagementService.Api.Controllers
     [ApiController]
     public class TaskItemsController : ControllerBase
     {
-        private readonly TodoContext _context;
         private readonly ITaskItemsService _service;
 
-        public TaskItemsController(TodoContext context, ITaskItemsService service)
+        public TaskItemsController(ITaskItemsService service)
         {
-            _context = context;
             _service = service;
         }
 
@@ -37,10 +35,6 @@ namespace TaskManagementService.Api.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
-            return await _context.TaskItems
-                .Select(x => ItemToDto(x))
-                .ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -61,15 +55,6 @@ namespace TaskManagementService.Api.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
-            var todoItem = await _context.TaskItems.FindAsync(id);
-
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            return ItemToDto(todoItem);
         }
 
         [HttpPut("{id}")]
@@ -88,28 +73,8 @@ namespace TaskManagementService.Api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, e.StackTrace);
             }
-
-            // var todoItem = await _context.TaskItems.FindAsync(taskItemDto.Id);
-            // if (todoItem == null)
-            // {
-            //     return NotFound();
-            // }
-            //
-            // todoItem.Name = taskItemDto.Name;
-            // todoItem.IsComplete = taskItemDto.IsComplete;
-            //
-            // try
-            // {
-            //     await _context.SaveChangesAsync();
-            // }
-            // catch (DbUpdateConcurrencyException) when (!TaskExists(id))
-            // {
-            //     return NotFound();
-            // }
-            //
-            // return NoContent();
         }
 
         [HttpPost]
@@ -132,20 +97,6 @@ namespace TaskManagementService.Api.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-
-            var taskItem = new TaskItem
-            {
-                IsComplete = taskItemDto.IsComplete,
-                Name = taskItemDto.Name
-            };
-
-            _context.TaskItems.Add(taskItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(
-                nameof(TaskItem),
-                new { id = taskItem.Id },
-                ItemToDto(taskItem));
         }
 
         [HttpDelete("{id}")]
@@ -153,14 +104,12 @@ namespace TaskManagementService.Api.Controllers
         {
             try
             {
-                var isExist = (await _service.GetTaskItemById(id)) != null ? true : false;
+                var deletedTask = await _service.DeleteTaskItem(id);
 
-                if (isExist)
+                if (id == null)
                 {
                     return NotFound();
                 }
-                
-                var deletedTask = await _service.DeleteTaskItem(id);
 
                 return NoContent();
             }
@@ -168,29 +117,6 @@ namespace TaskManagementService.Api.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-            
-            var todoItem = await _context.TaskItems.FindAsync(id);
-
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.TaskItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
-
-        private bool TaskExists(long id) =>
-             _context.TaskItems.Any(e => e.Id == id);
-
-        private static TaskItemDto ItemToDto(TaskItem todoItem) =>
-            new TaskItemDto
-            {
-                Id = todoItem.Id,
-                Name = todoItem.Name,
-                IsComplete = todoItem.IsComplete
-            };       
     }
 }

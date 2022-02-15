@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using TaskManagementService.Application.Dto;
 using TaskManagementService.Application.Models;
@@ -8,7 +9,7 @@ namespace TaskManagementService.Application.Common.Mappings
     {
         public TaskItemProfile()
         {
-            CreateMap<TaskItem, TaskItemDto>();
+            CreateMap<TaskItemDto, TaskItem>().ReverseMap();
         }
     }
 }

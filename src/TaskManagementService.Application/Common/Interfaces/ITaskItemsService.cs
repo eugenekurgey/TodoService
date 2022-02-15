@@ -10,6 +10,6 @@ namespace TaskManagementService.Application.Common.Interfaces
         Task<TaskItemDto> GetTaskItemById(long id);
         Task<TaskItemDto> UpdateTaskItem(TaskItemDto taskItemDto);
         Task<TaskItemDto> CreateTaskItem(TaskItemDto taskDto);
-        Task<long> DeleteTaskItem(long id);
+        Task<long?> DeleteTaskItem(long id);
     }
 }

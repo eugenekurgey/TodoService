@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using TaskManagementService.Api.Models;
 using Swashbuckle.AspNetCore;
 using TaskManagementService.Application;
+using TaskManagementService.Infrastructure;
 
 namespace TodoApi
 {
@@ -29,13 +30,11 @@ namespace TodoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt =>
-               opt.UseInMemoryDatabase("TodoList"));
             services.AddControllers();
-
             services.AddSwaggerGen();
 
             services.AddApplication();
+            services.AddInfrastructure(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
