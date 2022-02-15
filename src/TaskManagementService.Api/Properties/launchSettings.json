@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TaskManagementService": {
+    "TaskManagementService.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

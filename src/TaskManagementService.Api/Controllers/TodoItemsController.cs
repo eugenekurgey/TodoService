@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoApi.Models;
+using TaskManagementService.Application.Models;
+using TaskManagementService.Application.Dto;
+using TaskManagementService.Api.Models;
 
-namespace TodoApi.Controllers
+namespace TaskManagementService.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +21,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemDTO>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems()
         {
             return await _context.TodoItems
                 .Select(x => ItemToDTO(x))
@@ -27,7 +29,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemDTO>> GetTodoItem(long id)
+        public async Task<ActionResult<TodoItemDto>> GetTodoItem(long id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
@@ -40,7 +42,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTodoItem(long id, TodoItemDTO todoItemDTO)
+        public async Task<IActionResult> UpdateTodoItem(long id, TodoItemDto todoItemDTO)
         {
             if (id != todoItemDTO.Id)
             {
@@ -69,7 +71,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TodoItemDTO>> CreateTodoItem(TodoItemDTO todoItemDTO)
+        public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemDto todoItemDTO)
         {
             var todoItem = new TodoItem
             {
@@ -105,8 +107,8 @@ namespace TodoApi.Controllers
         private bool TodoItemExists(long id) =>
              _context.TodoItems.Any(e => e.Id == id);
 
-        private static TodoItemDTO ItemToDTO(TodoItem todoItem) =>
-            new TodoItemDTO
+        private static TodoItemDto ItemToDTO(TodoItem todoItem) =>
+            new TodoItemDto
             {
                 Id = todoItem.Id,
                 Name = todoItem.Name,

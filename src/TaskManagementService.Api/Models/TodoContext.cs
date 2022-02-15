@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManagementService.Application.Models;
 
-namespace TodoApi.Models
+namespace TaskManagementService.Api.Models
 {
     public class TodoContext : DbContext
     {
@@ -8,7 +9,7 @@ namespace TodoApi.Models
             : base(options)
         {
         }
-
+        
         public DbSet<TodoItem> TodoItems { get; set; }
     }
 }
