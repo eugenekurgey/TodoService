@@ -1,7 +1,7 @@
 ﻿namespace TaskManagementService.Application.Dto
 {
     #region snippet
-    public class TodoItemDto
+    public class TaskItemDto
     {
         public long Id { get; set; }
         public string Name { get; set; }

@@ -10,6 +10,6 @@ namespace TaskManagementService.Api.Models
         {
         }
         
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
     }
 }

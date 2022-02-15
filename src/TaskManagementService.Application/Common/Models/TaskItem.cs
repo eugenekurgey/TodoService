@@ -1,7 +1,7 @@
 ﻿namespace TaskManagementService.Application.Models
 {
     #region snippet
-    public class TodoItem
+    public class TaskItem
     {
         public long Id { get; set; }
         public string Name { get; set; }
