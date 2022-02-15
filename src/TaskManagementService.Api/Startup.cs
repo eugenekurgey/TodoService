@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TaskManagementService.Api.Models;
+using Swashbuckle.AspNetCore;
 
 namespace TodoApi
 {
@@ -30,6 +31,8 @@ namespace TodoApi
             services.AddDbContext<TodoContext>(opt =>
                opt.UseInMemoryDatabase("TodoList"));
             services.AddControllers();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +42,13 @@ namespace TodoApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(opt =>
+            {
+                opt.RoutePrefix = string.Empty;
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
 
             app.UseHttpsRedirection();
 
