@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TaskManagementService.Api.Models;
 using Swashbuckle.AspNetCore;
+using TaskManagementService.Application;
 
 namespace TodoApi
 {
@@ -33,6 +34,8 @@ namespace TodoApi
             services.AddControllers();
 
             services.AddSwaggerGen();
+
+            services.AddApplication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

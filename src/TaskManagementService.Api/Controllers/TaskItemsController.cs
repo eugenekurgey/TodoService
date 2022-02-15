@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using TaskManagementService.Application.Models;
 using TaskManagementService.Application.Dto;
 using TaskManagementService.Api.Models;
+using TaskManagementService.Application.Common.Interfaces;
 
 namespace TaskManagementService.Api.Controllers
 {
@@ -14,15 +16,28 @@ namespace TaskManagementService.Api.Controllers
     public class TaskItemsController : ControllerBase
     {
         private readonly TodoContext _context;
+        private readonly ITaskItemsService _service;
 
-        public TaskItemsController(TodoContext context)
+        public TaskItemsController(TodoContext context, ITaskItemsService service)
         {
             _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetTaskItems()
         {
+            try
+            {
+                var items = await _service.GetTaskItems();
+
+                return Ok(items);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
             return await _context.TaskItems
                 .Select(x => ItemToDto(x))
                 .ToListAsync();
@@ -31,6 +46,22 @@ namespace TaskManagementService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskItemDto>> TaskItem(long id)
         {
+            try
+            {
+                var task = await _service.GetTaskItemById(id);
+
+                if (task == null)
+                {
+                    return NotFound();
+                }
+
+                return task;
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
             var todoItem = await _context.TaskItems.FindAsync(id);
 
             if (todoItem == null)
@@ -42,41 +73,70 @@ namespace TaskManagementService.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTaskItem(long id, TaskItemDto taskItemDto)
+        public async Task<IActionResult> UpdateTaskItem(TaskItemDto taskItemDto)
         {
-            if (id != taskItemDto.Id)
-            {
-                return BadRequest();
-            }
-
-            var todoItem = await _context.TaskItems.FindAsync(id);
-            if (todoItem == null)
-            {
-                return NotFound();
-            }
-
-            todoItem.Name = taskItemDto.Name;
-            todoItem.IsComplete = taskItemDto.IsComplete;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var updatedTask = await _service.UpdateTaskItem(taskItemDto);
+
+                if (updatedTask == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updatedTask);
             }
-            catch (DbUpdateConcurrencyException) when (!TaskExists(id))
+            catch (Exception e)
             {
-                return NotFound();
+                return StatusCode(500, e.Message);
             }
 
-            return NoContent();
+            // var todoItem = await _context.TaskItems.FindAsync(taskItemDto.Id);
+            // if (todoItem == null)
+            // {
+            //     return NotFound();
+            // }
+            //
+            // todoItem.Name = taskItemDto.Name;
+            // todoItem.IsComplete = taskItemDto.IsComplete;
+            //
+            // try
+            // {
+            //     await _context.SaveChangesAsync();
+            // }
+            // catch (DbUpdateConcurrencyException) when (!TaskExists(id))
+            // {
+            //     return NotFound();
+            // }
+            //
+            // return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskItemDto>> CreateTaskItem(TaskItemDto taskDto)
+        public async Task<ActionResult<TaskItemDto>> CreateTaskItem(TaskItemDto taskItemDto)
         {
+            try
+            {
+                var isExist = (await _service.GetTaskItemById(taskItemDto.Id)) != null ? true : false;
+
+                if (isExist)
+                {
+                    return BadRequest($"Task with id {taskItemDto.Id} is already exist" );
+                }
+                
+                var createdTask = await _service.CreateTaskItem(taskItemDto);
+
+                return Ok(createdTask);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
             var taskItem = new TaskItem
             {
-                IsComplete = taskDto.IsComplete,
-                Name = taskDto.Name
+                IsComplete = taskItemDto.IsComplete,
+                Name = taskItemDto.Name
             };
 
             _context.TaskItems.Add(taskItem);
@@ -91,6 +151,24 @@ namespace TaskManagementService.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaskItem(long id)
         {
+            try
+            {
+                var isExist = (await _service.GetTaskItemById(id)) != null ? true : false;
+
+                if (isExist)
+                {
+                    return NotFound();
+                }
+                
+                var deletedTask = await _service.DeleteTaskItem(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
             var todoItem = await _context.TaskItems.FindAsync(id);
 
             if (todoItem == null)
