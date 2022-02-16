@@ -16,7 +16,7 @@ using Swashbuckle.AspNetCore;
 using TaskManagementService.Application;
 using TaskManagementService.Infrastructure;
 
-namespace TodoApi
+namespace TaskManagementService.Api
 {
     public class Startup
     {
@@ -44,7 +44,7 @@ namespace TodoApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(opt =>
             {

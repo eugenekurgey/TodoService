@@ -16,6 +16,7 @@ namespace TaskManagementService.Infrastructure
                 opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
             });
 
+            services.AddLogging();
             services.AddTransient<ITaskRepository, TaskRepository>();
             
             return services;

@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TaskManagementService.Api.Models;
 using TaskManagementService.Application.Common.Interfaces;
 using TaskManagementService.Application.Models;
+using Microsoft.Extensions.Logging;
 
 namespace TaskManagementService.Infrastructure.Repositories
 {
     public class TaskRepository : ITaskRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<TaskRepository> _logger;
 
-        public TaskRepository(ApplicationDbContext ctx)
+        public TaskRepository(ApplicationDbContext ctx, ILogger<TaskRepository> logger)
         {
             _context = ctx;
+            _logger = logger;
         }
         
         public Task<List<TaskItem>> GetAll()
@@ -26,7 +30,7 @@ namespace TaskManagementService.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
                 throw;
             }
             
@@ -40,7 +44,7 @@ namespace TaskManagementService.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
                 throw;
             }
         }
@@ -58,7 +62,7 @@ namespace TaskManagementService.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
                 throw;
             }
 
@@ -75,7 +79,7 @@ namespace TaskManagementService.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
                 throw;
             }
         }
@@ -91,7 +95,7 @@ namespace TaskManagementService.Infrastructure.Repositories
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message);
                 throw;
             }
         }

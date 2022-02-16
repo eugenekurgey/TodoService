@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TaskManagementService.Application.Models;
 using TaskManagementService.Application.Dto;
 using TaskManagementService.Api.Models;
@@ -16,10 +17,12 @@ namespace TaskManagementService.Api.Controllers
     public class TaskItemsController : ControllerBase
     {
         private readonly ITaskItemsService _service;
+        private readonly ILogger<TaskItemsController> _logger;
 
-        public TaskItemsController(ITaskItemsService service)
+        public TaskItemsController(ITaskItemsService service, ILogger<TaskItemsController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]

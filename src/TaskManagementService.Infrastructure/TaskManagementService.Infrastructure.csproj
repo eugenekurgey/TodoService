@@ -13,4 +13,10 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.22" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10">
+        <HintPath>C:\Users\Eugene Kurgey\.nuget\packages\serilog\2.10.0\lib\netstandard2.1\Serilog.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
